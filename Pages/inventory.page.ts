@@ -1,4 +1,4 @@
-import { Page, Locator } from '@playwright/test';
+import { Page, Locator, expect } from '@playwright/test';
 
 export class InventoryPage {
   readonly page: Page;
@@ -11,12 +11,21 @@ export class InventoryPage {
     this.cartBadge = page.locator('.shopping_cart_badge');
   }
 
+  async verifyOnInventoryPage() {
+    await this.page.waitForSelector('.inventory_item button', { state: 'visible', timeout: 10000 });
+    await expect(this.page).toHaveURL(/inventory.html/);
+  }
+
   async addFirstProductToCart() {
-     await this.firstProductAddToCartBtn.waitFor({ state: 'visible', timeout: 5000 });
     await this.firstProductAddToCartBtn.click();
   }
 
   async isProductAdded() {
     return await this.cartBadge.isVisible();
+  }
+
+  async goToCart() {
+    await this.page.click('.shopping_cart_link');
+    await expect(this.page).toHaveURL(/cart.html/);
   }
 }

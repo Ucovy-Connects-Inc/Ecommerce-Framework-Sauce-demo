@@ -1,4 +1,4 @@
-import { Page, Locator } from '@playwright/test';
+import { Page, Locator, expect } from '@playwright/test';
 import { config } from '../Utils/config';
 
 export class LoginPage {
@@ -13,7 +13,7 @@ export class LoginPage {
     this.usernameInput = page.locator('#user-name');
     this.passwordInput = page.locator('#password');
     this.loginButton = page.locator('#login-button');
-      this.errorMessage = page.locator('[data-test="error"]');
+    this.errorMessage = page.locator('[data-test="error"]');
   }
 
   async navigate() {
@@ -25,11 +25,11 @@ export class LoginPage {
     await this.passwordInput.fill(password);
     await this.loginButton.click();
   }
-   async isErrorMessageVisible() {
+
+  async isErrorMessageVisible() {
     return await this.errorMessage.isVisible();
   }
-
-  async getErrorMessageText() {
-    return await this.errorMessage.textContent();
+  async expectOnLoginPage() {
+    await expect(this.page).toHaveURL(config.baseURL);
   }
 }

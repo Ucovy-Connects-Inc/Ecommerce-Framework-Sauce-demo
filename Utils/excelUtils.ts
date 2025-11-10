@@ -1,8 +1,5 @@
-import * as path from 'path';  // Node.js built-in module
+import * as path from 'path';
 import * as XLSX from 'xlsx';
-
-// Use absolute path or normalize it with path module
-export const excelFilePath = path.resolve('C:/Users/rajes/OneDrive/Desktop/saucedemo-playwright/testData/Credentials.xlsx');
 
 export function readExcelSheet(filePath: string, sheetName: string) {
   const workbook = XLSX.readFile(filePath);
