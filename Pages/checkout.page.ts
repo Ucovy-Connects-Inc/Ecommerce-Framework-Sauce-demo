@@ -1,17 +1,20 @@
 import { Page, Locator } from '@playwright/test';
-import { WaitUtils } from '../Utils/WaitUtils';
+import { WaitUtils } from '../utils/waitUtils';
 
 export class CheckoutPage {
-  private waitUtils: WaitUtils;
+  readonly checkoutButton: Locator;
   readonly firstNameInput: Locator;
   readonly lastNameInput: Locator;
   readonly postalCodeInput: Locator;
   readonly continueButton: Locator;
   readonly finishButton: Locator;
   readonly confirmationMessage: Locator;
+  private wait: WaitUtils;
 
   constructor(private page: Page) {
-    this.waitUtils = new WaitUtils(page);
+    this.wait = new WaitUtils(page);
+
+    this.checkoutButton = page.locator('#checkout');
     this.firstNameInput = page.locator('#first-name');
     this.lastNameInput = page.locator('#last-name');
     this.postalCodeInput = page.locator('#postal-code');
@@ -21,21 +24,25 @@ export class CheckoutPage {
   }
 
   async startCheckout() {
-    await this.waitUtils.clickWithWait(this.page.locator('#checkout'));
+    await this.wait.click(this.checkoutButton);
   }
 
-  async fillCheckoutInformation(data: { firstName: string; lastName: string; postalCode: string }) {
-    await this.waitUtils.fillWithWait(this.firstNameInput, data.firstName);
-    await this.waitUtils.fillWithWait(this.lastNameInput, data.lastName);
-    await this.waitUtils.fillWithWait(this.postalCodeInput, data.postalCode);
-    await this.waitUtils.clickWithWait(this.continueButton);
+  async fillCheckoutInformation(data: {
+    firstName: string;
+    lastName: string;
+    postalCode: string;
+  }) {
+    await this.wait.fill(this.firstNameInput, data.firstName);
+    await this.wait.fill(this.lastNameInput, data.lastName);
+    await this.wait.fill(this.postalCodeInput, data.postalCode);
+    await this.wait.click(this.continueButton);
   }
 
   async finishCheckout() {
-    await this.waitUtils.clickWithWait(this.finishButton);
+    await this.wait.click(this.finishButton);
   }
 
   async waitForConfirmation() {
-    await this.waitUtils.waitForVisible(this.confirmationMessage, WaitUtils.LONG);
+    await this.wait.waitForVisible(this.confirmationMessage, WaitUtils.LONG);
   }
 }

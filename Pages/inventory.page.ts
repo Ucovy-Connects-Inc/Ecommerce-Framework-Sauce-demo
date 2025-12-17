@@ -1,30 +1,34 @@
 import { Page, Locator } from '@playwright/test';
-import { WaitUtils } from '../Utils/WaitUtils';
+import { WaitUtils } from '../utils/waitUtils';
 
 export class InventoryPage {
   readonly inventoryItems: Locator;
   readonly cartBadge: Locator;
   readonly cartLink: Locator;
   readonly firstAddToCartButton: Locator;
-  waitUtils: any;
+  private wait: WaitUtils;
 
   constructor(private page: Page) {
-    this.waitUtils = new WaitUtils(page);
+    this.wait = new WaitUtils(page);
     this.inventoryItems = page.locator('.inventory_item');
     this.cartBadge = page.locator('.shopping_cart_badge');
     this.cartLink = page.locator('.shopping_cart_link');
-    this.firstAddToCartButton = page.locator('button.btn_primary').first();
+
+    // stronger selector
+    this.firstAddToCartButton = page.locator(
+      '[data-test^="add-to-cart"]'
+    ).first();
   }
 
   async waitForLoaded() {
-    await this.waitUtils.waitForVisible(this.inventoryItems.first());
+    await this.wait.waitForVisible(this.inventoryItems.first());
   }
 
   async addFirstProductToCart() {
-    await this.waitUtils.clickWithWait(this.firstAddToCartButton);
+    await this.wait.click(this.firstAddToCartButton);
   }
 
   async openCart() {
-    await this.waitUtils.clickWithWait(this.cartLink);
+    await this.wait.click(this.cartLink);
   }
 }

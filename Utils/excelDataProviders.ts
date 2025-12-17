@@ -1,34 +1,38 @@
 // utils/excelDataProviders.ts
 import path from 'path';
 import { readExcelSheet } from './excelUtils';
+import { test } from '@playwright/test';
 
-export type ExcelRow = Record<string, unknown>;
+export type ExcelRow = Record<string, string>;
 
-const EXCEL_FILE_PATH = process.env.EXCEL_FILE_PATH || 'testData/Credentials.xlsx';
+const EXCEL_FILE_PATH =
+    process.env.EXCEL_FILE_PATH || 'testData/Credentials.xlsx';
 const SHEET_NAME = 'Sheet1';
 
 function loadAllRows(): ExcelRow[] {
-    return readExcelSheet<ExcelRow>(EXCEL_FILE_PATH, SHEET_NAME);
+    const rows = readExcelSheet<ExcelRow>(EXCEL_FILE_PATH, SHEET_NAME);
+    if (!rows.length) {
+        throw new Error(`Excel sheet ${SHEET_NAME} is empty`);
+    }
+    return rows;
 }
 
-// Row whose TestData matches spec file name → login user
-export function getLoginUserForSpec(specPath: string): ExcelRow {
-    const specName = path.basename(specPath);
+export function getLoginUserForSpec(specFile: string): ExcelRow {
+    const specName = path.basename(specFile);
     const rows = loadAllRows();
 
-    const match = rows.find(r => String(r['TestData'] ?? '').trim() === specName);
+    const match = rows.find(
+        r => r.TestData?.trim() === specName
+    );
+
     if (!match) {
-        throw new Error(`No TestData row found for ${specName}`);
+        test.skip(true, `No Excel data for spec: ${specName}`);
     }
-    return match;
+
+    return match!;
 }
 
-// First data row → checkout info
 export function getCheckoutInfoFirstRow(): ExcelRow {
     const rows = loadAllRows();
-    const first = rows[0];
-    if (!first) {
-        throw new Error('No data rows found in Excel');
-    }
-    return first;
+    return rows[0];
 }

@@ -1,15 +1,14 @@
-// pages/login.page.ts
 import { Page, Locator } from '@playwright/test';
-import { WaitUtils } from '../Utils/WaitUtils';
+import { WaitUtils } from '../utils/waitUtils';
 
 export class LoginPage {
-  private waitUtils: WaitUtils;
   readonly usernameInput: Locator;
   readonly passwordInput: Locator;
   readonly loginButton: Locator;
+  private wait: WaitUtils;
 
   constructor(private page: Page) {
-    this.waitUtils = new WaitUtils(page);
+    this.wait = new WaitUtils(page);
     this.usernameInput = page.locator('#user-name');
     this.passwordInput = page.locator('#password');
     this.loginButton = page.locator('#login-button');
@@ -20,8 +19,8 @@ export class LoginPage {
   }
 
   async login(username: string, password: string) {
-    await this.waitUtils.fillWithWait(this.usernameInput, username);
-    await this.waitUtils.fillWithWait(this.passwordInput, password);
-    await this.waitUtils.clickWithWait(this.loginButton);
+    await this.wait.fill(this.usernameInput, username);
+    await this.wait.fill(this.passwordInput, password);
+    await this.wait.click(this.loginButton);
   }
 }
