@@ -10,7 +10,7 @@ export default defineConfig({
   workers: 4,
   use: {
     baseURL: 'https://www.saucedemo.com',
-    headless: false,
+    headless: !!process.env.CI,
     viewport: { width: 1280, height: 720 },
     ignoreHTTPSErrors: true,
   },
