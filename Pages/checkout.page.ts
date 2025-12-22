@@ -9,6 +9,7 @@ export class CheckoutPage {
   readonly continueButton: Locator;
   readonly finishButton: Locator;
   readonly confirmationMessage: Locator;
+
   private wait: WaitUtils;
 
   constructor(private page: Page) {

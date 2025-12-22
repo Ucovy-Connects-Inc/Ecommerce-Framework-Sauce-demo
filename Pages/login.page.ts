@@ -5,6 +5,7 @@ export class LoginPage {
   readonly usernameInput: Locator;
   readonly passwordInput: Locator;
   readonly loginButton: Locator;
+
   private wait: WaitUtils;
 
   constructor(private page: Page) {

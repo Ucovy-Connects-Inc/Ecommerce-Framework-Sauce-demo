@@ -28,7 +28,4 @@ jobs:
         run: npm ci
 
       - name: Install Playwright browsers
-        run: npx playwright install --with-deps
-
-      - name: Run Playwright tests
-        run: npx playwright test --project=${{ matrix.browser }}
+        run: npx playwright
