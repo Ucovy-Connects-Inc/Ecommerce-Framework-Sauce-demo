@@ -1,5 +1,5 @@
+// playwright.config.ts
 import { defineConfig } from '@playwright/test';
-import { config } from './Utils/config';
 
 export default defineConfig({
   testDir: './tests',
@@ -9,13 +9,15 @@ export default defineConfig({
   retries: 1,
   workers: 4,
   use: {
-    baseURL: config.baseURL,
-    headless: false,
+    baseURL: 'https://www.saucedemo.com',
+    headless: !!process.env.CI,
     viewport: { width: 1280, height: 720 },
     ignoreHTTPSErrors: true,
   },
   projects: [
     { name: 'chromium', use: { browserName: 'chromium' } },
+    { name: 'firefox', use: { browserName: 'firefox' } },
+    { name: 'webkit', use: { browserName: 'webkit' } },
   ],
   reporter: [['list'], ['html', { outputFolder: 'playwright-report' }]],
 });
